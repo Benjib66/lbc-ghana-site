@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Time Sheet — Le Blanc Consulting Ghana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand-blue: #24678d;
+      --brand-orange: #da8044;
+      --orange-light: #f5e8d8;
+      --blue-light: #e8f2f8;
+      --blue-dark: #1a4d6b;
+      --danger: #c0392b;
+      --danger-light: #fdf0ef;
+      --success: #1e7e34;
+      --success-light: #eaf5ec;
+      --gray-50: #f9f9f9;
+      --gray-100: #f0f0f0;
+      --gray-200: #e0e0e0;
+      --gray-400: #9e9e9e;
+      --gray-700: #424242;
+      --white: #ffffff;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f7;
+      color: var(--gray-700);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: var(--brand-blue);
+      color: white;
+      padding: 24px 24px 0;
+      border-bottom: 4px solid var(--brand-orange);
+    }
+    .header-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .logo-mark {
+      width: 44px; height: 44px;
+      background: var(--brand-orange);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 18px; color: white; flex-shrink: 0;
+    }
+    .logo-text { font-size: 15px; font-weight: 600; line-height: 1.3; }
+    .logo-text span { display: block; font-size: 12px; font-weight: 400; opacity: 0.7; }
+
+    .header-tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .tab {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      border-radius: var(--radius) var(--radius) 0 0;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .tab.active {
+      background: #f0f4f7;
+      color: var(--brand-blue);
+      font-weight: 600;
+    }
+
+    /* ── ALERT BANNER ── */
+    .alert-banner {
+      background: var(--brand-orange);
+      color: white;
+      padding: 12px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ── FORM CONTAINER ── */
+    .form-wrap {
+      max-width: 680px;
+      margin: 28px auto 0;
+      padding: 0 16px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--brand-blue);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    label .req { color: var(--danger); margin-left: 2px; }
+    label .hint {
+      font-weight: 400;
+      color: var(--gray-400);
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--gray-700);
+      background: var(--white);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(36,103,141,0.12);
+    }
+    input[readonly] {
+      background: var(--gray-50);
+      color: var(--brand-blue);
+      font-weight: 600;
+      border-color: var(--gray-100);
+    }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239e9e9e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .dropdown-row {
+      display: grid;
+      grid-template-columns: 0.8fr 1.4fr 0.9fr;
+      gap: 8px;
+    }
+    .time-row {
+      grid-template-columns: 1fr 1fr 0.85fr;
+    }
+    @media (max-width: 520px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── JOB TITLE RADIO GROUP ── */
+    .radio-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+    .radio-option input[type="radio"] {
+      width: 16px; height: 16px; min-width: 16px;
+      accent-color: var(--brand-blue);
+      cursor: pointer;
+      margin: 0; padding: 0; border: none; box-shadow: none;
+    }
+    .radio-option:has(input:checked) {
+      border-color: var(--brand-blue);
+      background: var(--blue-light);
+      color: var(--brand-blue);
+    }
+
+    /* ── HOURS CALCULATED ── */
+    .hours-display {
+      background: var(--blue-light);
+      border: 1.5px solid var(--brand-blue);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hours-label { font-size: 13px; color: var(--brand-blue); font-weight: 500; }
+    .hours-value { font-size: 22px; font-weight: 700; color: var(--brand-blue); }
+    .hours-unit { font-size: 13px; color: var(--brand-blue); font-weight: 400; }
+
+    /* ── SIGNATURE BLOCK ── */
+    .sig-note {
+      font-size: 13px;
+      color: var(--gray-400);
+      line-height: 1.6;
+      background: var(--gray-50);
+      border-left: 3px solid var(--brand-orange);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 16px;
+    }
+
+    /* ── SUBMIT ── */
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--brand-blue);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .submit-btn:hover { background: var(--blue-dark); }
+    .submit-btn:active { transform: scale(0.99); }
+
+    /* ── SUCCESS STATE ── */
+    .success-card {
+      display: none;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 48px 32px;
+      text-align: center;
+    }
+    .success-card.show { display: block; }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: var(--success-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+    }
+    .success-card h2 { font-size: 20px; color: var(--success); margin-bottom: 8px; }
+    .success-card p { font-size: 15px; color: var(--gray-400); margin-bottom: 24px; }
+    .success-summary {
+      background: var(--gray-50);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--gray-700);
+      margin-bottom: 24px;
+    }
+    .reset-btn {
+      background: transparent;
+      border: 1.5px solid var(--brand-blue);
+      color: var(--brand-blue);
+      padding: 11px 28px;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .reset-btn:hover { background: var(--blue-light); }
+
+    /* ── VALIDATION ── */
+    .field-error {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 5px;
+      display: none;
+    }
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea {
+      border-color: var(--danger);
+    }
+    .field.invalid .field-error { display: block; }
+
+    /* ── OTHER FIELD ── */
+    #other-title-wrap { display: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="logo-mark">LB</div>
+      <div class="logo-text">
+        Le Blanc Consulting Ghana
+        <span>Employee Self-Service Portal</span>
+      </div>
+    </div>
+    <div class="header-tabs">
+      <button class="tab active">Daily Time Sheet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div class="alert-banner">
+  ⚠️ This is your official daily time clock. Fill out every field completely. An incomplete or missing submission means you did not clock in for the day — no exceptions.
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+
+  <!-- SUCCESS CARD (hidden until submit) -->
+  <div class="success-card" id="success-card">
+    <div class="success-icon">✓</div>
+    <h2>Time Sheet Submitted</h2>
+    <p>Your entry has been recorded. Keep this reference for your records.</p>
+    <div class="success-summary" id="success-summary"></div>
+    <button class="reset-btn" onclick="resetForm()">Submit Another Entry</button>
+  </div>
+
+  <!-- ACTUAL FORM -->
+  <form id="timesheet-form" novalidate>
+
+    <!-- SECTION 1: EMPLOYEE INFO -->
+    <div class="card">
+      <div class="card-title">Employee Information</div>
+
+      <div class="field-row">
+        <div class="field" id="field-first">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" id="first-name" placeholder="e.g. Kwame" autocomplete="given-name"/>
+          <div class="field-error">First name is required.</div>
+        </div>
+        <div class="field" id="field-last">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" id="last-name" placeholder="e.g. Mensah" autocomplete="family-name"/>
+          <div class="field-error">Last name is required.</div>
+        </div>
+      </div>
+
+      <div class="field" id="field-phone">
+        <label>Phone Number <span class="hint">(optional)</span></label>
+        <input type="tel" id="phone" placeholder="e.g. 0241234567"/>
+      </div>
+
+      <div class="field" id="field-job">
+        <label>Job Title <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="job_title" value="Plumber"/> Plumber</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Electrician"/> Electrician</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Mason"/> Mason</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Carpenter"/> Carpenter</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Painter"/> Painter</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Welder"/> Welder</label>
+          <label class="radio-option"><input type="radio" name="job_title" value="Other"/> Other</label>
+        </div>
+        <div id="other-title-wrap">
+          <input type="text" id="other-title" placeholder="Please specify your job title"/>
+        </div>
+        <div class="field-error" id="job-error">Please select your job title.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: WORK DETAILS -->
+    <div class="card">
+      <div class="card-title">Work Details</div>
+
+      <div class="field" id="field-site">
+        <label>Project / Site Location <span class="req">*</span></label>
+        <input type="text" id="site" placeholder="e.g. Accra Mall Renovation, East Legon"/>
+        <div class="field-error">Site location is required.</div>
+      </div>
+
+      <div class="field" id="field-supervisor">
+        <label>Supervisor Name <span class="req">*</span></label>
+        <select id="supervisor">
+          <option value="">— Select Supervisor —</option>
+          <option>Benjamin Forkuoh</option>
+          <option>Site Manager A</option>
+          <option>Site Manager B</option>
+          <option>Site Manager C</option>
+        </select>
+        <div class="field-error">Please select your supervisor.</div>
+      </div>
+
+      <div class="field" id="field-work">
+        <label>Work Performed <span class="req">*</span> <span class="hint">Describe tasks completed today</span></label>
+        <textarea id="work-performed" placeholder="e.g. Installed 3 electrical sockets in Block B, rewired circuit panel in Unit 4, assisted with conduit routing on ground floor..."></textarea>
+        <div class="field-error">Please describe the work performed.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: TIME TRACKING -->
+    <div class="card">
+      <div class="card-title">Time Tracking</div>
+
+      <div class="field" id="field-date">
+        <label>Work Date <span class="req">*</span></label>
+        <div class="dropdown-row">
+          <select id="date-day"><option value="">Day</option></select>
+          <select id="date-month">
+            <option value="">Month</option>
+            <option value="0">January</option><option value="1">February</option>
+            <option value="2">March</option><option value="3">April</option>
+            <option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option>
+            <option value="8">September</option><option value="9">October</option>
+            <option value="10">November</option><option value="11">December</option>
+          </select>
+          <select id="date-year"><option value="">Year</option></select>
+        </div>
+        <input type="hidden" id="work-date"/>
+        <div class="field-error">Please select the work date.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="field-start">
+          <label>Start Time <span class="req">*</span></label>
+          <div class="dropdown-row time-row">
+            <select id="start-hour"><option value="">Hr</option></select>
+            <select id="start-min"><option value="">Min</option></select>
+            <select id="start-ampm"><option value="AM">AM</option><option value="PM">PM</option></select>
+          </div>
+          <input type="hidden" id="start-time"/>
+          <div class="field-error">Start time is required.</div>
+        </div>
+        <div class="field" id="field-end">
+          <label>End Time <span class="req">*</span></label>
+          <div class="dropdown-row time-row">
+            <select id="end-hour"><option value="">Hr</option></select>
+            <select id="end-min"><option value="">Min</option></select>
+            <select id="end-ampm"><option value="AM">AM</option><option value="PM">PM</option></select>
+          </div>
+          <input type="hidden" id="end-time"/>
+          <div class="field-error">End time is required.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Break Duration <span class="req">*</span> <span class="hint">in minutes</span></label>
+        <select id="break-duration">
+          <option value="0">No break</option>
+          <option value="15">15 minutes</option>
+          <option value="30" selected>30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60">60 minutes (1 hour)</option>
+          <option value="90">90 minutes</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Total Hours Worked</label>
+        <div class="hours-display">
+          <span class="hours-label">Calculated automatically</span>
+          <div>
+            <span class="hours-value" id="hours-display">—</span>
+            <span class="hours-unit" id="hours-unit"></span>
+          </div>
+        </div>
+        <input type="hidden" id="hours-worked"/>
+      </div>
+    </div>
+
+    <!-- SECTION 4: SIGNATURE -->
+    <div class="card">
+      <div class="card-title">Digital Signature & Declaration</div>
+      <div class="sig-note">
+        By submitting this form with your name, you confirm that all information entered is accurate and truthful. You agree that this digital submission constitutes your signature for payroll and attendance records.
+      </div>
+      <div class="field" id="field-sig">
+        <label>Full Name (as signature) <span class="req">*</span></label>
+        <input type="text" id="signature" placeholder="Type your full name to sign"/>
+        <div class="field-error">Please type your full name to sign.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Time Sheet →</button>
+
+  </form>
+</div>
+
+<script>
+  // ── BUILD DATE DROPDOWNS ──
+  const daySel = document.getElementById('date-day');
+  const yearSel = document.getElementById('date-year');
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; daySel.appendChild(o); }
+  const nowYear = new Date().getFullYear();
+  for (let y = nowYear; y >= nowYear - 1; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); }
+
+  function syncDate() {
+    const d = document.getElementById('date-day').value;
+    const m = document.getElementById('date-month').value;
+    const y = document.getElementById('date-year').value;
+    if (d && m !== '' && y) {
+      const mm = String(parseInt(m)+1).padStart(2,'0');
+      const dd = String(d).padStart(2,'0');
+      document.getElementById('work-date').value = `${y}-${mm}-${dd}`;
+    } else {
+      document.getElementById('work-date').value = '';
+    }
+  }
+  ['date-day','date-month','date-year'].forEach(id => document.getElementById(id).addEventListener('change', syncDate));
+
+  // Set today as default
+  const now = new Date();
+  document.getElementById('date-day').value = now.getDate();
+  document.getElementById('date-month').value = now.getMonth();
+  document.getElementById('date-year').value = now.getFullYear();
+  syncDate();
+
+  // ── BUILD TIME DROPDOWNS ──
+  function buildTimeDropdowns(hourId, minId) {
+    const hSel = document.getElementById(hourId);
+    const mSel = document.getElementById(minId);
+    for (let h = 1; h <= 12; h++) { const o = document.createElement('option'); o.value = h; o.textContent = String(h).padStart(2,'0'); hSel.appendChild(o); }
+    for (let m = 0; m < 60; m += 15) { const o = document.createElement('option'); o.value = m; o.textContent = String(m).padStart(2,'0'); mSel.appendChild(o); }
+  }
+  buildTimeDropdowns('start-hour','start-min');
+  buildTimeDropdowns('end-hour','end-min');
+
+  // Set start-ampm default to AM, end to PM
+  document.getElementById('start-ampm').value = 'AM';
+  document.getElementById('end-ampm').value = 'PM';
+
+  function syncTime(prefix) {
+    const h = document.getElementById(prefix+'-hour').value;
+    const m = document.getElementById(prefix+'-min').value;
+    const ap = document.getElementById(prefix+'-ampm').value;
+    const hidden = document.getElementById(prefix+'-time');
+    if (h && m !== '') {
+      let h24 = parseInt(h);
+      if (ap === 'PM' && h24 !== 12) h24 += 12;
+      if (ap === 'AM' && h24 === 12) h24 = 0;
+      hidden.value = `${String(h24).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    } else {
+      hidden.value = '';
+    }
+    calcHours();
+  }
+  ['start-hour','start-min','start-ampm'].forEach(id => document.getElementById(id).addEventListener('change', () => syncTime('start')));
+  ['end-hour','end-min','end-ampm'].forEach(id => document.getElementById(id).addEventListener('change', () => syncTime('end')));
+
+  // Show/hide "Other" job title input
+  document.querySelectorAll('input[name="job_title"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('other-title-wrap').style.display = this.value === 'Other' ? 'block' : 'none';
+    });
+  });
+
+  // Auto-calculate hours
+  function calcHours() {
+    const start = document.getElementById('start-time').value;
+    const end = document.getElementById('end-time').value;
+    const brk = parseInt(document.getElementById('break-duration').value) || 0;
+    const display = document.getElementById('hours-display');
+    const unit = document.getElementById('hours-unit');
+    const hidden = document.getElementById('hours-worked');
+    if (start && end) {
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      let mins = (eh * 60 + em) - (sh * 60 + sm) - brk;
+      if (mins <= 0) { display.textContent = '—'; unit.textContent = ''; hidden.value = ''; return; }
+      const hours = Math.floor(mins / 60);
+      const rem = mins % 60;
+      display.textContent = rem > 0 ? `${hours}h ${rem}m` : `${hours}`;
+      unit.textContent = rem > 0 ? '' : ' hrs';
+      hidden.value = (mins / 60).toFixed(2);
+    }
+  }
+  document.getElementById('break-duration').addEventListener('change', calcHours);
+
+  // Validation
+  function validate() {
+    let valid = true;
+    function check(fieldId, condition) {
+      const field = document.getElementById(fieldId);
+      if (!condition) { field.classList.add('invalid'); valid = false; }
+      else { field.classList.remove('invalid'); }
+    }
+    check('field-first', document.getElementById('first-name').value.trim());
+    check('field-last', document.getElementById('last-name').value.trim());
+    check('field-sig', document.getElementById('signature').value.trim());
+    check('field-site', document.getElementById('site').value.trim());
+    check('field-supervisor', document.getElementById('supervisor').value);
+    check('field-work', document.getElementById('work-performed').value.trim());
+    check('field-date', document.getElementById('work-date').value);
+    check('field-start', document.getElementById('start-time').value);
+    check('field-end', document.getElementById('end-time').value);
+    const jobSelected = document.querySelector('input[name="job_title"]:checked');
+    const jobField = document.getElementById('field-job');
+    const jobError = document.getElementById('job-error');
+    if (!jobSelected) { jobField.classList.add('invalid'); jobError.style.display = 'block'; valid = false; }
+    else { jobField.classList.remove('invalid'); jobError.style.display = 'none'; }
+    return valid;
+  }
+
+  function fmtDate(d) {
+    if (!d) return '';
+    const [y,m,day] = d.split('-');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+  }
+  function fmtTime(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+
+  document.getElementById('timesheet-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validate()) { document.querySelector('.field.invalid').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    const job = document.querySelector('input[name="job_title"]:checked').value;
+    const jobLabel = job === 'Other' ? (document.getElementById('other-title').value || 'Other') : job;
+    const hours = document.getElementById('hours-display').textContent;
+    const brk = document.getElementById('break-duration');
+    const brkLabel = brk.options[brk.selectedIndex].text;
+    document.getElementById('success-summary').innerHTML = `
+      <strong>Name:</strong> ${document.getElementById('first-name').value} ${document.getElementById('last-name').value}<br>
+      <strong>Job Title:</strong> ${jobLabel}<br>
+      <strong>Site:</strong> ${document.getElementById('site').value}<br>
+      <strong>Supervisor:</strong> ${document.getElementById('supervisor').value}<br>
+      <strong>Date:</strong> ${fmtDate(document.getElementById('work-date').value)}<br>
+      <strong>Start:</strong> ${fmtTime(document.getElementById('start-time').value)} &nbsp;|&nbsp; <strong>End:</strong> ${fmtTime(document.getElementById('end-time').value)}<br>
+      <strong>Break:</strong> ${brkLabel} &nbsp;|&nbsp; <strong>Hours Worked:</strong> ${hours}<br>
+      <strong>Work Performed:</strong> ${document.getElementById('work-performed').value.substring(0,120)}${document.getElementById('work-performed').value.length > 120 ? '…' : ''}
+    `;
+    document.getElementById('timesheet-form').style.display = 'none';
+    const sc = document.getElementById('success-card');
+    sc.classList.add('show');
+    sc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  function resetForm() {
+    document.getElementById('timesheet-form').reset();
+    document.getElementById('timesheet-form').style.display = 'block';
+    document.getElementById('success-card').classList.remove('show');
+    // Re-set today's date
+    const t = new Date();
+    document.getElementById('date-day').value = t.getDate();
+    document.getElementById('date-month').value = t.getMonth();
+    document.getElementById('date-year').value = t.getFullYear();
+    syncDate();
+    document.getElementById('start-ampm').value = 'AM';
+    document.getElementById('end-ampm').value = 'PM';
+    document.getElementById('start-time').value = '';
+    document.getElementById('end-time').value = '';
+    document.getElementById('hours-display').textContent = '—';
+    document.getElementById('hours-unit').textContent = '';
+    document.getElementById('other-title-wrap').style.display = 'none';
+    document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
